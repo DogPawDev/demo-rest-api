@@ -9,12 +9,8 @@ Java 11
 SpringBoot 2.3.2  (내장)
 
 - Spring framework 5.2.8
-- Junit 5.6.2
+- Junit 5.6.2 -> 4.13 변경해서 사
 - Apache Tomcat 9.0.37
-
-추가 의존성
-
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d0df6b89-57de-482f-aafe-37ace8962c5a/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d0df6b89-57de-482f-aafe-37ace8962c5a/Untitled.png)
 
 Spring Data JPA 2.3.2
 
@@ -27,4 +23,10 @@ Spring RERST Docs 2.0.4
 Lombok 1.18.12
 
 ---------------------
-프로젝트 생성
+프로젝트 생성 
+
+--------
+pom.xml 수정
+
+h2, postgreSql 스코프 변경
+
