@@ -4,9 +4,11 @@ package me.foodev.demorestapi.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +40,10 @@ public class EventControllerTests {
     ObjectMapper objectMapper;
     //스프링 부트에 이미 been으로 등록이 되어 있기 대문에 쉽게 사용이 가능하다.
 
+    @MockBean //WebMvcTest 는 웹에만 필요한 것만 사용하기 때문에 Repository는 직접 등록해줘야 한다.
+    EventRepository eventRepository;
+    //이렇게 수정하고 진행해도 또 에러가 나오는데 이건 Mock 객체이기 때문에 save를 해도 null이 나온다.
+
     @Test
     public void createEvent() throws Exception {
        Event event = Event.builder()
@@ -52,7 +58,7 @@ public class EventControllerTests {
                .limitOfEnrollment(100)
                .location("강남역 D2 스타텁 팩토")
                .build();
-
+        Mockito.when(eventRepository.save(event)).thenReturn(event);
 
        mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
        .contentType(MediaType.APPLICATION_JSON)

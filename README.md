@@ -40,3 +40,6 @@ h2, postgreSql 스코프 변경
 Event 생성 API 구현 : 201 응답 받기
 
 ----
+이벤트 Repository 생성
+
+----
