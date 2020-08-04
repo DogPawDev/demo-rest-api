@@ -14,9 +14,9 @@ SpringBoot 2.3.2  (내장)
 
 Spring Data JPA 2.3.2
 
-Spring Web 2.3.2
+Spring Web 5.2.8
 
-Spring HATEOAS 2.3.2
+Spring HATEOAS 1.1.0
 
 Spring RERST Docs 2.0.4
 
@@ -34,3 +34,6 @@ h2, postgreSql 스코프 변경
 이벤트 도메인 구현
 
 ----
+이벤트 API 테스트 클래스 생성
+
+---
