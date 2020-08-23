@@ -1,17 +1,17 @@
 package me.foodev.demorestapi.events;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
-@Builder @AllArgsConstructor @NoArgsConstructor
-@Getter @Setter @EqualsAndHashCode(of ="id")
-@Entity
-public class Event {
-    @Id @GeneratedValue
-    private Integer id;
+@Builder @NoArgsConstructor @AllArgsConstructor
+@Data
+public class EventDto {
+    //입력 값을 받는 DTO를 밖으로 빼서 코드 가독성을 높임 하지만 중복이 있을 수 있다.
+    //이만큼만 입력을 받을 수 잇다.
     private String name;
     private String description;
     private LocalDateTime beginEnrollmentDateTime;
@@ -22,9 +22,4 @@ public class Event {
     private int basePrice; // (optional)
     private int maxPrice; // (optional)
     private int limitOfEnrollment;
-    private boolean offline;
-    private boolean free;
-    @Enumerated(EnumType.STRING)
-    private EventStatus eventStatus = EventStatus.DRAFT; //기본값으로 설정 해
-
 }
