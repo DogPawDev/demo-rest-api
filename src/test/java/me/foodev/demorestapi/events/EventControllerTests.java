@@ -45,8 +45,7 @@ public class EventControllerTests {
 
     @Test
     public void createEvent() throws Exception {
-       Event event = Event.builder() //제대로 된 요청을 만들기 위해 사용
-               .id(100)// id  값은 자동생성이 되야하는데 값을 입력 받으면 안된다.
+       EventDto event = EventDto.builder() //제대로 된 요청을 만들기 위해 사용
                .name("spring")
                .description("REST API Develmont with Spring")
                .beginEnrollmentDateTime(LocalDateTime.of(2019,11,30,20,4))
@@ -57,10 +56,8 @@ public class EventControllerTests {
                .maxPrice(200)
                .limitOfEnrollment(100)
                .location("강남역 D2 스타텁 팩토")
-               .free(true)   // 프리와 오프라인은 입력이 되면 안되는 값이다. 자동으로 계산되서 넣어저야하는 값
-               .offline(false) //함
-               .eventStatus(EventStatus.PUBLISHED)
                .build();
+    //정상적인 값들이 들어오는 경우
 
 //이벤트 리파지솥리가 호출되면 이벤트객체를 리턴하라 !
        mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
@@ -78,6 +75,38 @@ public class EventControllerTests {
        ;
 
        //HAL 스펙을 이용해 밥고자 한다.
+
+    }
+    @Test
+    public void createEvent_Bad_Requset() throws Exception {
+        Event event = Event.builder() //제대로 된 요청을 만들기 위해 사용
+                .id(100)// id  값은 자동생성이 되야하는데 값을 입력 받으면 안된다.
+                .name("spring")
+                .description("REST API Develmont with Spring")
+                .beginEnrollmentDateTime(LocalDateTime.of(2019,11,30,20,4))
+                .closeEnrollmentDateTime(LocalDateTime.of(2019,12,30,20,4))
+                .beginEventDateTime(LocalDateTime.of(2019,12,30,20,4))
+                .endEventDateTime(LocalDateTime.of(2019,12,30,20,4))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역 D2 스타텁 팩토")
+                .free(true)   // 프리와 오프라인은 입력이 되면 안되는 값이다. 자동으로 계산되서 넣어저야하는 값
+                .offline(false) //함
+                .eventStatus(EventStatus.PUBLISHED)
+                .build();
+//들어와서는 안되는 값들이 들어오는 경우
+
+        //bad 리퀘스트로 나오면 테스트 걸리는 경우
+ mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON) //포스트 요청이 JSON을 보내고 있다.
+                .accept(MediaTypes.HAL_JSON)//나는 어떤 응답을 원한다를 업셉트 헤더를 통해 알려줄 수 있다. - 나는 HAL JSON을 원한다.
+                .content(objectMapper.writeValueAsString(event))) //accept 헤더를 통해 리퀘스트가 무엇을 원하는지 알 수 있다. //제이슨으로 바꾸고 본문에 넣어준 것
+                .andDo(print())//콘솔에서 어떤 응답과 어떤 요청을 했는지 확인 할 수 있다.
+                .andExpect(status().isBadRequest()) //201이 나오는지 확인해볼 것이다.
+        ;
+
+        //HAL 스펙을 이용해 밥고자 한다.
 
     }
 
