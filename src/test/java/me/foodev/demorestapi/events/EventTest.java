@@ -1,8 +1,12 @@
 package me.foodev.demorestapi.events;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
+@RunWith(JUnitParamsRunner.class)
 
 public class EventTest {
 
@@ -35,47 +39,54 @@ public class EventTest {
 
     }
 
-    @Test
-    public void testFree(){
-        //given
-        Event event = Event.builder()
-                .basePrice(0)
-                .maxPrice(0)
-                .build();
-        //when
-        event.update();
-
-        //then
-        assertThat(event.isFree()).isTrue();
-
-
-        //given
-         event = Event.builder()
-                .basePrice(100)
-                .maxPrice(0)
-                .build();
-        //when
-        event.update();
-
-        //then
-        assertThat(event.isFree()).isFalse();
-
-
-        //given
-         event = Event.builder()
-                .basePrice(0)
-                .maxPrice(100)
-                .build();
-        //when
-        event.update();
-
-        //then
-        assertThat(event.isFree()).isFalse();
-
+    private Object[] paramsForTestFree(){
+        return new Object[]{
+                new Object[]{0,0,true},
+                new Object[]{100,0,false},
+                new Object[]{0,100,false},
+                new Object[]{100,200,false},
+        };
     }
 
     @Test
-    public void testOffLIne(){
+    /*
+    @Parameters({
+            "0,0,true",
+            "100,0,false",
+            "0,100,false"
+    })//해당 값들이 파라미터로 들어간다. 문자열로 써도되고
+    //오브젝트의 메소드를 주어 사용도 가능하다
+    */
+    @Parameters(method = "paramsForTestFree")
+    public void testFree(int basePrice,int maxPrice,boolean isFree){
+        //given
+        Event event = Event.builder()
+                .basePrice(basePrice)
+                .maxPrice(maxPrice)
+                .build();
+        //when
+        event.update();
+
+        //then
+        assertThat(event.isFree()).isEqualTo(isFree);
+
+
+
+    }
+
+    private Object[] paramsForTestOffline(){
+        return new Object[]{
+                new Object[]{"강남",true},
+                new Object[]{null,false},
+                new Object[]{"",false}
+
+
+        };
+    }
+
+    @Test
+    @Parameters(method = "paramsForTestOffline")
+    public void testOffLIne(String location , boolean isOffline){
         //given
         Event event = Event.builder()
                 .location("강남역 네이버 D2 스타텁 팩토리")
@@ -85,15 +96,6 @@ public class EventTest {
 
         //then
         assertThat(event.isOffline()).isTrue();
-
-        //given
-        event = Event.builder()
-                .build();
-        //when
-        event.update();
-
-        //then
-        assertThat(event.isOffline()).isFalse();
 
     }
 }
