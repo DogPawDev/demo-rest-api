@@ -46,11 +46,14 @@ public class EventController {
         // .build()
 
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
         }
         eventValidator.validate(eventDto,errors);
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
+            //errors 객체를 JSON으로 변환 할 수 없어서 바디에 바로 넣어서 못 보낸다.
+            //자바빈 스펙을 준수하지 않으므로
+            //Event 객체는 자바빈 스펙을 준수해서 자동으로 변환이 된다.
         }
 
         Event event = modelMapper.map(eventDto,Event.class);//목킹시 객체 가 같지 않아서 에러남

@@ -1,9 +1,13 @@
 package me.foodev.demorestapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import me.foodev.demorestapi.common.ErrorsSerializer;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.validation.Errors;
 
 @SpringBootApplication
 public class DemoRestApiApplication {

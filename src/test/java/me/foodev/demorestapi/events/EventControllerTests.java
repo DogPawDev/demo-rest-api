@@ -146,6 +146,16 @@ public class EventControllerTests {
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(eventDto)))
-                .andExpect(status().isBadRequest());
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].defaultMessage").exists())
+                .andExpect(jsonPath("$[0].code").exists())
+
+              //해당 값들이 있기를 바람
+        //erros 변수안에 해당 값들이 들어 있다.
+            ;
+
+        //배드 리퀘스트 바디안에 메세지를 넣으려고 한다.
     }
 }
