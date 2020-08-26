@@ -2,6 +2,7 @@ package me.foodev.demorestapi.events;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.foodev.demorestapi.common.TestDescription;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,7 @@ public class EventControllerTests {
 
 
     @Test
+    @TestDescription("정상적으로 이벤트를 생성하는 테스트")
     public void createEvent() throws Exception {
        EventDto event = EventDto.builder() //제대로 된 요청을 만들기 위해 사용
                .name("spring")
@@ -78,6 +80,7 @@ public class EventControllerTests {
 
     }
     @Test
+    @TestDescription("입력 받을 수 없는 값을 사용한 경우에 에러가 발생하는 테스트")
     public void createEvent_Bad_Requset() throws Exception {
         Event event = Event.builder() //제대로 된 요청을 만들기 위해 사용
                 .id(100)// id  값은 자동생성이 되야하는데 값을 입력 받으면 안된다.
@@ -110,5 +113,39 @@ public class EventControllerTests {
 
     }
 
+   @Test
+   @TestDescription("입력 값이 비어있는 경우에 에러가 발생하는 테스트")
+    public void createEvent_Bad_Request_Empty_Input() throws Exception{
+        EventDto eventDto = EventDto.builder().build(); //입력값이 없을경우 201이 아니라 400이 나와야 정
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andExpect(status().isBadRequest());
+   }
 
+    @Test
+    @TestDescription("입력값이 잘못된 경우에 에러가 발생하는 테스트") //주석을 달거나 에노테이션을 달아서 무슨 테스트인지 설명을 해놓으면 좋다
+    //이런 에노테이션은 제이유닛5에서 설명 붙이는게 쉽다.
+    public void createEvent_Bad_Request_Wrong_Input() throws Exception{
+        EventDto eventDto = EventDto.builder()
+                .name("spring")
+                .description("REST API Develmont with Spring")
+                .beginEnrollmentDateTime(LocalDateTime.of(2018,11,26,14,4))
+                .closeEnrollmentDateTime(LocalDateTime.of(2019,11,25,14,4))
+                .beginEventDateTime(LocalDateTime.of(2019,12,30,20,4))
+                .endEventDateTime(LocalDateTime.of(2019,12,30,20,4))
+                .basePrice(10000)
+                .maxPrice(200)     /// 끝나는 날보다 시작날이 더 뒤에 있거나 맥스 프라이스가 베이스 프라이스보다 값이 작은경우 등 제대로된 요청이 아님
+                .limitOfEnrollment(100)
+                .location("강남역 D2 스타텁 팩토")
+                .build();
+
+        //이런경우는 에노테이션으로 검증하기가 히믈다.
+        //
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andExpect(status().isBadRequest());
+    }
 }
