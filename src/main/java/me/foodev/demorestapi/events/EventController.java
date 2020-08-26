@@ -57,8 +57,9 @@ public class EventController {
         }
 
         Event event = modelMapper.map(eventDto,Event.class);//목킹시 객체 가 같지 않아서 에러남
+        event.update();
         Event newEvent = this.eventRepository.save(event);
-       URI createUri = linkTo(EventController.class).slash("{id}").toUri();
+       URI createUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
        //spring HATEOS가 제공하는 URI 생성 메소
      //  event.setId(10);
     return ResponseEntity.created(createUri).body(event);

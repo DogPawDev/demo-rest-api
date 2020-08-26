@@ -27,4 +27,22 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT; //기본값으로 설정 해
 
+
+    public void update(){
+        //update free
+        if(this.basePrice ==0 && this.maxPrice==0){
+            this.free=true;
+        }else{
+            this.free=false;
+        }
+
+        //update offline
+        if(this.location==null||this.location.isBlank()){
+            this.offline=false;
+        }//isBlank 자바 11부터 추가됨 조금더 확실한 체크
+        else{
+            this.offline=true;
+        }
+    }
+
 }

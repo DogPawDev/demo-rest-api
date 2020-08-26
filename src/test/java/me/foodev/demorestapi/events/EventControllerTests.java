@@ -67,13 +67,17 @@ public class EventControllerTests {
        .accept(MediaTypes.HAL_JSON)//나는 어떤 응답을 원한다를 업셉트 헤더를 통해 알려줄 수 있다. - 나는 HAL JSON을 원한다.
        .content(objectMapper.writeValueAsString(event))) //accept 헤더를 통해 리퀘스트가 무엇을 원하는지 알 수 있다. //제이슨으로 바꾸고 본문에 넣어준 것
        .andDo(print())//콘솔에서 어떤 응답과 어떤 요청을 했는지 확인 할 수 있다.
-       .andExpect(status().isCreated()) //201이 나오는지 확인해볼 것이다.
-       .andExpect(jsonPath("id").exists()) //id 가 있는지 확인하는 테스트 구문
-       .andExpect(header().exists(HttpHeaders.LOCATION))
-       .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_VALUE))
-       .andExpect(jsonPath("id").value(Matchers.not(100)))
-       .andExpect(jsonPath("free").value(Matchers.not(true)))//이런 값들을 제한하기위해 DTO를 사용해서 막을 것
-       .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
+
+               .andExpect(status().isCreated()) //201이 나오는지 확인해볼 것이다.
+
+               .andExpect(jsonPath("id").exists()) //id 가 있는지 확인하는 테스트 구문
+
+
+               .andExpect(header().exists(HttpHeaders.LOCATION))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_VALUE))
+               .andExpect(jsonPath("free").value(false))//이런 값들을 제한하기위해 DTO를 사용해서 막을 것
+               .andExpect(jsonPath("offline").value(true))//이런 값들을 제한하기위해 DTO를 사용해서 막을 것
+               .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
        ;
 
        //HAL 스펙을 이용해 밥고자 한다.

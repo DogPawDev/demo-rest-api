@@ -50,3 +50,9 @@ Event 생성 API 구현 : 201 응답 받기
 
 ---
 Bad Request 처리 
+
+---
+bad request 응답
+
+---
+비즈니스 로직 적용
