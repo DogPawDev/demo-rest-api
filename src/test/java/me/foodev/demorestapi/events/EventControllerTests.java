@@ -78,9 +78,12 @@ public class EventControllerTests {
                .andExpect(jsonPath("free").value(false))//이런 값들을 제한하기위해 DTO를 사용해서 막을 것
                .andExpect(jsonPath("offline").value(true))//이런 값들을 제한하기위해 DTO를 사용해서 막을 것
                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
-       ;
+               .andExpect(jsonPath("_links.self").exists())
+               .andExpect(jsonPath("_links.query-events").exists())
+               .andExpect(jsonPath("_links.update-event").exists())
 
-       //HAL 스펙을 이용해 밥고자 한다.
+
+       ;
 
     }
     @Test

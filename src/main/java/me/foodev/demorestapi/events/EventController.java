@@ -3,6 +3,7 @@ package me.foodev.demorestapi.events;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,9 +60,18 @@ public class EventController {
         Event event = modelMapper.map(eventDto,Event.class);//목킹시 객체 가 같지 않아서 에러남
         event.update();
         Event newEvent = this.eventRepository.save(event);
-       URI createUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
+
+
+        ControllerLinkBuilder selfLinkBuilder = linkTo(EventController.class).slash(newEvent.getId());
+        URI createUri = selfLinkBuilder.toUri(); //리퀘스트매핑에 적힌 URI를 가저와 거기다 붙인 것
        //spring HATEOS가 제공하는 URI 생성 메소
      //  event.setId(10);
-    return ResponseEntity.created(createUri).body(event);
+        EventResource eventResource = new EventResource(event);
+        eventResource.add(linkTo(EventController.class).withRel("query-events"));
+        eventResource.add(selfLinkBuilder.withSelfRel());
+        eventResource.add(selfLinkBuilder.withRel("update-event"));
+
+
+        return ResponseEntity.created(createUri).body(eventResource);
     }
 }
