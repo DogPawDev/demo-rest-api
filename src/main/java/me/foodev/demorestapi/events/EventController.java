@@ -1,5 +1,6 @@
 package me.foodev.demorestapi.events;
 
+import me.foodev.demorestapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -48,11 +49,11 @@ public class EventController {
         // .build()
 
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return getResponseEntity(errors);
         }
         eventValidator.validate(eventDto,errors);
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().body(errors);
+            return getResponseEntity(errors);
             //errors 객체를 JSON으로 변환 할 수 없어서 바디에 바로 넣어서 못 보낸다.
             //자바빈 스펙을 준수하지 않으므로
             //Event 객체는 자바빈 스펙을 준수해서 자동으로 변환이 된다.
@@ -75,5 +76,9 @@ public class EventController {
 
 
         return ResponseEntity.created(createUri).body(eventResource);
+    }
+
+    private ResponseEntity getResponseEntity(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
