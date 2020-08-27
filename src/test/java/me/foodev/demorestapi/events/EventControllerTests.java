@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.RequestHeadersSnippet;
 import org.springframework.restdocs.hypermedia.LinksSnippet;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Import(RestDocsConfiguration.class)//스프링 설정파일을 읽어와서 사용하는 방법
+@ActiveProfiles("test") //h2를 사용하기 위한 설정 해당 에노테이션을 사용하면 테스트 applicaition-test.properties 를 사용
 public class EventControllerTests {
 
     @Autowired
