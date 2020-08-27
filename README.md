@@ -70,3 +70,6 @@ bad request 응답
 스프링 REST Docs 각종 문서 조각 생성하기
 
 ---
+스프링 REST Docs 문서 빌드
+
+---
