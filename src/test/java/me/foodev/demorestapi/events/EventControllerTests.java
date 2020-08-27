@@ -16,9 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.RequestHeadersSnippet;
+import org.springframework.restdocs.hypermedia.LinksSnippet;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +30,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 
 import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -87,7 +95,61 @@ public class EventControllerTests {
                .andExpect(jsonPath("_links.self").exists())
                .andExpect(jsonPath("_links.query-events").exists())
                .andExpect(jsonPath("_links.update-event").exists())
-               .andDo(document("create-event"))
+               .andDo(document("create-event",
+                       links(
+                               linkWithRel("self").description("link to self"),
+                               linkWithRel("query-events").description("link to query events"),
+                               linkWithRel("update-event").description("link to update an existing events")
+
+               ),
+                       requestHeaders(
+                               headerWithName(HttpHeaders.ACCEPT).description("accept header"),
+                               headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header")
+                       ),
+                       requestFields(
+                               fieldWithPath("name").description("Name of new Events"),
+                               fieldWithPath("description").description("description of new events"),
+                               fieldWithPath("beginEnrollmentDateTime").description("date time of begin of new event"),
+                               fieldWithPath("closeEnrollmentDateTime").description("date time of close of new event"),
+                               fieldWithPath("beginEventDateTime").description("date time of begin of new event"),
+                               fieldWithPath("endEventDateTime").description("date time of end of new event"),
+                               fieldWithPath("location").description("location of new event"),
+                               fieldWithPath("basePrice").description("basePrice of new event"),
+                               fieldWithPath("maxPrice").description("maxPrice of new event"),
+                               fieldWithPath("limitOfEnrollment").description("limitOfEnrollment of new event")
+
+
+
+
+                               ),
+                       responseHeaders(
+                               headerWithName(HttpHeaders.LOCATION).description("locaiton header"),
+                               headerWithName(HttpHeaders.CONTENT_TYPE).description("contetn type")
+                       ),
+                       relaxedResponseFields( //문서의 일부분만 검증을 하도록 함
+                               fieldWithPath("id").description("id of new Events"),
+                               fieldWithPath("name").description("Name of new Events"),
+                               fieldWithPath("description").description("description of new events"),
+                               fieldWithPath("beginEnrollmentDateTime").description("date time of begin of new event"),
+                               fieldWithPath("closeEnrollmentDateTime").description("date time of close of new event"),
+                               fieldWithPath("beginEventDateTime").description("date time of begin of new event"),
+                               fieldWithPath("endEventDateTime").description("date time of end of new event"),
+                               fieldWithPath("location").description("location of new event"),
+                               fieldWithPath("basePrice").description("basePrice of new event"),
+                               fieldWithPath("maxPrice").description("maxPrice of new event"),
+                               fieldWithPath("limitOfEnrollment").description("limitOfEnrollment of new event"),
+                               fieldWithPath("free").description("it tells if this event is free event or not"),
+                               fieldWithPath("offline").description("it tells if this event if offline event or not "),
+                               fieldWithPath("eventStatus").description("event status")
+                              // fieldWithPath("_links.self.herf").description("it tells if this event if offline event or not "),
+                               //fieldWithPath("_links.query-events.herf").description("it tells if this event if offline event or not "),
+                               //fieldWithPath("_links.q").description("it tells if this event if offline event or not ")
+//                                       위와 같이 추가해주면 relaxed를 추가해 해당 검증을 안할 수 있다. 하지만 위 주석처럼 이렇게 해주는게 좋다                               )
+
+
+
+
+               ))
 
        ;
 
