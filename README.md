@@ -62,3 +62,7 @@ bad request 응답
 
 ---
 스프링 HATEOAS 적용
+
+---
+스프링 REST Docs 적용
+
